@@ -11,7 +11,6 @@ Socrata = (function(Socrata, $, undefined) {
       extractHost(that, url);
     }
 
-
     //private methods {{{
     extractUID = function(that, url) {
       matches = url.match(/.*([a-z0-9]{4}-[a-z0-9]{4}).*/);
@@ -34,6 +33,15 @@ Socrata = (function(Socrata, $, undefined) {
     return DatasetManager;
   })();
   //}}}
+
+  Socrata.Dataset = (function() {
+    function Dataset() {
+      this.rows = [];
+      this.columns = [];
+    }
+
+    return Dataset;
+  })();
 
   return Socrata;
 }(window.Socrata = window.Socrata || {}, jQuery));
