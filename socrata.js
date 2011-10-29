@@ -2,31 +2,63 @@ Socrata = (function(Socrata, $, undefined) {
 
   //DatasetManager {{{
   Socrata.DatasetManager = (function() {
+
+  var host, uid;
+
     function DatasetManager(url){
       if (url === undefined) {
         throw new Error("DatasetManager constructor expects URL parameter");
       }
-      var that = this;
-      extractUID(that, url);
-      extractHost(that, url);
+      extractUID(url);
+      extractHost(url);
     }
 
+    DatasetManager.prototype.getDataset = function(callback) {
+      var dataset = new Socrata.Dataset();
+      var rurl = rowsUrl();
+      var curl = columnsUrl();
+      $.getJSON(curl, function(columnData) {
+        dataset.columns = columnData;
+        $.getJSON(rurl, function(rowData) {
+          var zippedObjectArray = [];
+          for (i=1; i<rowData.data.length; i++) {
+            zippedObjectArray.push($.zip(rowData.data[0], rowData.data[i]));
+          }
+          dataset.rows = zippedObjectArray;
+          callback(dataset);
+        });
+      });
+    };
+
     //private methods {{{
-    extractUID = function(that, url) {
+    extractUID = function(url) {
       matches = url.match(/.*([a-z0-9]{4}-[a-z0-9]{4}).*/);
       if ( matches == null || matches.length < 2 ) {
         return false;
       }
-      that.uid = matches[1];
+      uid = matches[1];
       return true;
     };
 
-    extractHost = function(that, url) {
+    extractHost = function(url) {
       matches = url.match(/^(?:[^\/]+:\/\/)?([^\/]+)/im);
       if ( matches == null || matches.length < 2 ) {
         return;
       }
-      this.host = "http://" + matches[1];
+      host = "http://" + matches[1];
+    };
+
+    jsonWrap = function(url) {
+      return host + url +
+        (url.indexOf('?') == -1 ? '?' : '&') + 'jsonp=?';
+    };
+
+    columnsUrl = function() {
+      return jsonWrap("/views/" + uid + "/columns.json");
+    };
+
+    rowsUrl = function() {
+      return jsonWrap("/views/" + uid + "/rows.json");
     };
     //}}}
 
