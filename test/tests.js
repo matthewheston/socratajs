@@ -56,3 +56,18 @@ test("DatasetManager.getDataset", function() {
    equals(rows[0]["Towed Address"], "701 N. Sacramento");
   });
 });
+
+test("DatasetManager.filterRows", function() {
+  var columns, rows;
+  var datasetManager = new Socrata.DatasetManager("http://data.cityofchicago.org/Transportation/Towed-Vehicles/ygr5-vcbg");
+  var filterFunction = function(row, index) {
+    return row.Make == "CHEV";
+  };
+  datasetManager.filterRows(filterFunction, function(dataset, index) {
+    columns = dataset.columns;
+    rows = dataset.rows;
+    equals(columns.length, 10);
+    equals(rows.length, 6);
+  });
+
+});

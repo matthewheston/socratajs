@@ -30,6 +30,14 @@ Socrata = (function(Socrata, $, undefined) {
       });
     };
 
+    DatasetManager.prototype.filterRows = function(filterFunction, callback) {
+      this.getDataset(function(dataset) {
+        var filteredDataset = dataset;
+        filteredDataset.rows = $.grep(dataset.rows, filterFunction);
+        callback(filteredDataset);
+      });
+    };
+
     //private methods {{{
     extractUID = function(url) {
       matches = url.match(/.*([a-z0-9]{4}-[a-z0-9]{4}).*/);
