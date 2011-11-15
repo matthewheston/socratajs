@@ -38,6 +38,24 @@ Socrata = (function(Socrata, $, undefined) {
       });
     };
 
+    DatasetManager.prototype.search = function(searchTerm, callback) {
+      var dataset = new Socrata.Dataset();
+      var rurl = getSearchUrl(searchTerm);
+      var curl = columnsUrl();
+      $.getJSON(curl, function(columnData) {
+        dataset.columns = columnData;
+        $.getJSON(rurl, function(rowData) {
+          var zippedObjectArray = [];
+          for (i=1; i<rowData.data.length; i++) {
+            zippedObjectArray.push($.zip(rowData.data[0], rowData.data[i]));
+          }
+          dataset.rows = zippedObjectArray;
+          callback(dataset);
+        });
+      });
+
+    };
+
     //private methods {{{
     extractUID = function(url) {
       matches = url.match(/.*([a-z0-9]{4}-[a-z0-9]{4}).*/);
@@ -68,6 +86,10 @@ Socrata = (function(Socrata, $, undefined) {
     rowsUrl = function() {
       return jsonWrap("/views/" + uid + "/rows.json");
     };
+
+    getSearchUrl = function(searchTerm) {
+     return this.jsonWrap("/views/" + uid + "/rows.json?search=" + searchTerm);
+    }
     //}}}
 
     return DatasetManager;
