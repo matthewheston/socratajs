@@ -20,8 +20,9 @@ Socrata = (function(Socrata, $, undefined) {
         dataset.columns = columnData;
         $.getJSON(rurl, function(rowData) {
           var zippedObjectArray = [];
+          var columns = $.map(rowData.meta.view.columns, function(c) {return c.name});
           for (i=1; i<rowData.data.length; i++) {
-            zippedObjectArray.push($.zip(rowData.data[0], rowData.data[i]));
+            zippedObjectArray.push($.zip(columns, rowData.data[i]));
           }
           dataset.rows = zippedObjectArray;
           callback(dataset);
@@ -45,8 +46,9 @@ Socrata = (function(Socrata, $, undefined) {
         dataset.columns = columnData;
         $.getJSON(rurl, function(rowData) {
           var zippedObjectArray = [];
+          var columns = $.map(rowData.meta.view.columns, function(c) {return c.name});
           for (i=1; i<rowData.data.length; i++) {
-            zippedObjectArray.push($.zip(rowData.data[0], rowData.data[i]));
+            zippedObjectArray.push($.zip(columns, rowData.data[i]));
           }
           dataset.rows = zippedObjectArray;
           callback(dataset);
