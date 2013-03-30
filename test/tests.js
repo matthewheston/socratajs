@@ -57,10 +57,10 @@ test("DatasetManager.getDataset", function() {
    equals(rows[0].Plate, "L656591");
    equals(rows[0].Color, "BLK");
    equals(rows[0].Make, "ACUR");
-   equals(rows[0].Phone, "(773) 265-7605");
+   equals(rows[0]["Tow Facility Phone"], "(773) 265-7605");
    equals(rows[0].Style, "2D");
    equals(rows[0].State, "IL");
-   equals(rows[0]["Towed Address"], "701 N. Sacramento");
+   equals(rows[0]["Towed to Address"], "701 N. Sacramento");
   });
 });
 
