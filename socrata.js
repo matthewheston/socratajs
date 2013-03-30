@@ -1,6 +1,5 @@
 Socrata = (function(Socrata, $, undefined) {
 
-  //DatasetManager {{{
   Socrata.DatasetManager = (function() {
 
   var host, uid;
@@ -56,7 +55,6 @@ Socrata = (function(Socrata, $, undefined) {
 
     };
 
-    //private methods {{{
     extractUID = function(url) {
       matches = url.match(/.*([a-z0-9]{4}-[a-z0-9]{4}).*/);
       if ( matches == null || matches.length < 2 ) {
@@ -90,11 +88,9 @@ Socrata = (function(Socrata, $, undefined) {
     getSearchUrl = function(searchTerm) {
      return this.jsonWrap("/views/" + uid + "/rows.json?search=" + searchTerm);
     }
-    //}}}
 
     return DatasetManager;
   })();
-  //}}}
 
   Socrata.Dataset = (function() {
     function Dataset() {
